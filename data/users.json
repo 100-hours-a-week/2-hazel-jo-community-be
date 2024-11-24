@@ -1,0 +1,26 @@
+{
+  "user": [
+    {
+      "id": 1,
+      "email": "test@naver.com",
+      "password": "Qwer123$",
+      "nickname": "빙글빙글",
+      "profileImg": "1731991788697-b7ad9159-6f67-4df8-af15-30619d1f640c.jpeg"
+    },
+    {
+      "id": 2,
+      "email": "dd@naver.com",
+      "password": "Qwer123$",
+      "nickname": "테스트용1",
+      "profileImg": "1731991817333-af3435bb-5935-4d36-afad-c4e7efd141f4.jpeg"
+    },
+    {
+      "id": 3,
+      "email": "ddd@naver.com",
+      "password": "Qwer123$",
+      "nickname": "테스트용2",
+      "profileImg": "1732090488388-matching_2_2.jpeg"
+    }
+  ],
+  "lastId": 3
+}
