@@ -104,29 +104,29 @@ export const editPost = (req, res) => {
         }
 
         const posts = loadPostData();
-        const postIndex = posts.posts.findIndex(post => post.post_id === Number(postId));
+        const post = posts.posts.find(post => post.post_id === Number(postId));
 
-        if(postIndex === -1) {
+        if(!post) {
             return res.status(404).json({
                 message: "게시글을 찾을 수 없습니다." 
             });
         }
 
         // 게시글 작성자와 수정 요청자가 다른 경우 
-        if(Number(posts.posts[postIndex].user_id) !== userId) {
+        if(Number(post.user_id) !== userId) {
             return res.status(401).json({
                 message: "해당 게시글 수정 권한이 없습니다."
             });
         }
 
         // multer 파일 업로드
-        let updatedImagePath = posts.posts[postIndex].image;  
+        let updatedImagePath = post.image;  
         if(req.file) {
             updatedImagePath = '/uploads/posts/' + req.file.filename;
         }
 
         posts.posts[postIndex] = {
-            ...posts.posts[postIndex],
+            ...post,
             title,
             content,
             image: updatedImagePath 
@@ -136,7 +136,7 @@ export const editPost = (req, res) => {
         try {
             savePostData(posts);
             return res.status(200).json({
-                message: "게시글이 수정되었습니다."
+                message: "게시글이 수정됐습니다."
             });
         } catch (error) {
             return res.status(500).json({
@@ -194,7 +194,7 @@ export const posts = (req, res) => {
 
     return res.status(200).json({
         posts: posts.posts,
-        message: "게시글 목록이 조회되었습니다."
+        message: "게시글 목록이 조회됐습니다."
     });
     
 }
@@ -203,19 +203,71 @@ export const posts = (req, res) => {
 export const postDetail = (req, res) => {
     const { postId } = req.params;
     const posts = loadPostData();
-    const postIndex = posts.posts.findIndex(post => post.post_id === Number(postId));
+    const post = posts.posts.find(post => post.post_id === Number(postId));
 
-    if(postIndex === -1) {
+    if(!post) {
         return res.status(404).json({
             message: "게시글을 찾을 수 없습니다."
         });
     }
 
     return res.status(200).json({
-        post: posts.posts[postIndex],
-        message: "게시글이 상세 조회되었습니다."
+        post,
+        message: "게시글이 상세 조회됐습니다."
     });
 }
 
 
+// 게시글 좋아요 수 조회 likeCount
+export const likeCount = (req, res) => {
+    try {
+        const { postId } = req.params;
+        const posts = loadPostData();
+        const post = posts.posts.find(post => post.post_id === Number(postId));
 
+        if(!post) {
+            return res.status(404).json({
+                message: "게시글을 찾을 수 없습니다."
+            });
+        }
+        
+        return res.status(200).json({
+            like: post.like,
+            message: "게시글 좋아요 수가 조회됐습니다."
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "게시글 좋아요 수 조회에 실패했습니다.",
+            error: error.message
+        });
+    }
+
+}
+
+// 게시글 좋아요 추가 likePost
+export const likePost = (req, res) => {
+    try {
+        const { postId } = req.params;
+        const posts = loadPostData();
+        const post = posts.posts.find(post => post.post_id === Number(postId));
+
+        if(!post) {
+            return res.status(404).json({
+            message: "게시글을 찾을 수 없습니다."
+            });
+        }
+
+        post.like += 1;
+        savePostData(posts);
+
+        return res.status(200).json({
+            likeCount: post.like,
+            message: "게시글 좋아요가 추가됐습니다."
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "게시글 좋아요 추가에 실패했습니다.",
+            error: error.message
+        });
+    }
+}
