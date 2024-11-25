@@ -271,3 +271,31 @@ export const likePost = (req, res) => {
         });
     }
 }
+
+// 게시글 조회수 viewCount
+export const viewCount = (req, res) => {
+    try {
+        const { postId } = req.params;
+        const posts = loadPostData();
+        const post = posts.posts.find(post => post.post_id === Number(postId));
+
+        if(!post) {
+            return res.status(404).json({
+                message: "게시글을 찾을 수 없습니다."
+            });
+        }
+
+        post.view += 1;
+        savePostData(posts);
+
+        return res.status(200).json({
+            viewCount: post.view,
+            message: "게시글 조회수가 조회됐습니다."
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "게시글 조회수 조회에 실패했습니다.",
+            error: error.message
+        });
+    }
+}

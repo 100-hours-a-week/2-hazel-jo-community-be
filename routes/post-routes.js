@@ -2,7 +2,7 @@ import express from 'express';
 import { makePost, posts, postDetail, editPost, deletePost } from '../controllers/post-controller.js';
 import multer from 'multer';
 import { isAuthenticated } from '../middlewares/auth.js';
-import { likeCount, likePost } from '../controllers/post-controller.js';
+import { likeCount, likePost, viewCount } from '../controllers/post-controller.js';
 //* 게시글 반응, 댓글 등등.. 추가 해야함  
 
 const router = express.Router();
@@ -34,6 +34,8 @@ router.delete('/:postId', isAuthenticated, deletePost);
 router.get('/:postId/like', likeCount);
 router.post('/:postId/like', likePost);
 
+// 조회수
+router.get('/:postId/view', viewCount);
 
 // 댓글 
 //router.get('/:postId/comments', comments);
