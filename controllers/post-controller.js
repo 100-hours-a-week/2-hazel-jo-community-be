@@ -71,6 +71,7 @@ export const makePost = (req, res) => {
             date: date || new Date().toLocaleString(),
             image: imagePath,
             like: 0,
+            likes: [],
             view: 0,
             comment: 0
         }; 
@@ -219,10 +220,13 @@ export const postDetail = (req, res) => {
 
 
 // 게시글 좋아요 수 조회 likeCount
-export const likeCount = (req, res) => {
+export const likeCount = async (req, res) => {
     try {
         const { postId } = req.params;
-        const posts = loadPostData();
+        const userId = req.session.user.userId;
+        console.log("likeCount userId", userId);
+
+        const posts = await loadPostData();
         const post = posts.posts.find(post => post.post_id === Number(postId));
 
         if(!post) {
@@ -230,9 +234,12 @@ export const likeCount = (req, res) => {
                 message: "게시글을 찾을 수 없습니다."
             });
         }
+
+        const isLiked = post.likes.includes(userId);
         
         return res.status(200).json({
             like: post.like,
+            isLiked,
             message: "게시글 좋아요 수가 조회됐습니다."
         });
     } catch (error) {
@@ -245,28 +252,48 @@ export const likeCount = (req, res) => {
 }
 
 // 게시글 좋아요 추가 likePost
-export const likePost = (req, res) => {
+export const likePost = async (req, res) => {
     try {
         const { postId } = req.params;
-        const posts = loadPostData();
+
+        // 로그인 한 유저의 userId 
+        const userId = req.session.user.userId;
+    
+        const posts = await loadPostData();
         const post = posts.posts.find(post => post.post_id === Number(postId));
 
         if(!post) {
             return res.status(404).json({
-            message: "게시글을 찾을 수 없습니다."
+                message: "게시글을 찾을 수 없습니다."
             });
         }
 
-        post.like += 1;
+        // 게시글 좋아요 누른 유저의 likes 배열이 없으면 초기화
+        if (!post.likes) {
+            post.likes = [];
+        }
+
+        // 유저가 좋아요를 눌렀는지 확인
+        const isLiked = post.likes.includes(userId);
+
+        // 이미 좋아요를 눌렀으면 좋아요 취소 / 안눌렀으면 좋아요 추가 
+        if(isLiked) {
+            post.likes = post.likes.filter(id => id !== userId);
+            post.like = Math.max(post.like - 1, 0);
+        } else {
+            post.likes.push(userId);
+            post.like += 1;
+        }
         savePostData(posts);
 
         return res.status(200).json({
+            message: "게시글 좋아요가 저장됐습니다.",
             likeCount: post.like,
-            message: "게시글 좋아요가 추가됐습니다."
+            isLiked: !isLiked
         });
     } catch (error) {
         return res.status(500).json({
-            message: "게시글 좋아요 추가에 실패했습니다.",
+            message: "게시글 좋아요 저장에 실패했습니다.",
             error: error.message
         });
     }
