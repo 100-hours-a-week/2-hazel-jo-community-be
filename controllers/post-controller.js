@@ -104,29 +104,29 @@ export const editPost = (req, res) => {
         }
 
         const posts = loadPostData();
-        const post = posts.posts.find(post => post.post_id === Number(postId));
+        const postIndex = posts.posts.findIndex(post => post.post_id === Number(postId));
 
-        if(!post) {
+        if(postIndex === -1) {
             return res.status(404).json({
                 message: "게시글을 찾을 수 없습니다." 
             });
         }
 
         // 게시글 작성자와 수정 요청자가 다른 경우 
-        if(Number(post.user_id) !== userId) {
+        if(Number(posts.posts[postIndex].user_id) !== userId) {
             return res.status(401).json({
                 message: "해당 게시글 수정 권한이 없습니다."
             });
         }
 
         // multer 파일 업로드
-        let updatedImagePath = post.image;  
+        let updatedImagePath = posts.posts[postIndex].image;  
         if(req.file) {
             updatedImagePath = '/uploads/posts/' + req.file.filename;
         }
 
         posts.posts[postIndex] = {
-            ...post,
+            ...posts.posts[postIndex],
             title,
             content,
             image: updatedImagePath 
