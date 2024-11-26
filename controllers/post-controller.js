@@ -299,3 +299,67 @@ export const viewCount = (req, res) => {
         });
     }
 }
+
+// 게시글 댓글 수 updateCommentCount
+export const updateCommentCount = (req, res) => {
+    try {
+        const { postId } = req.params;
+        const { action } = req.body;
+        const posts = loadPostData();
+        const post = posts.posts.find(post => post.post_id === Number(postId));
+
+        if(!post) {
+            return res.status(404).json({
+                message: "게시글을 찾을 수 없습니다."
+            });
+        }
+
+        // 댓글 수 증가/감소 
+        if (action === "add") {
+            post.comment += 1; 
+        } else if (action === "delete") {
+            post.comment = Math.max(post.comment - 1, 0); 
+        } else {
+            return res.status(400).json({
+                message: "유효하지 않은 액션입니다. 'add' 또는 'delete'를 사용하세요."
+            });
+        }
+        savePostData(posts);
+
+        return res.status(200).json({
+            commentCount: post.comment,
+            message: "게시글 댓글 수가 조회됐습니다."
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "게시글 댓글 수 조회에 실패했습니다.",
+            error: error.message
+        });
+    }
+}
+
+// 게시글 댓글 수 commentCount
+export const commentCount = (req, res) => {
+    try {
+        const { postId } = req.params;
+        const posts = loadPostData();
+        const post = posts.posts.find(post => post.post_id === Number(postId));
+
+        if(!post) {
+            return res.status(404).json({
+                message: "게시글을 찾을 수 없습니다."
+            });
+        }
+        return res.status(200).json({
+            commentCount: post.comment,
+            message: "게시글 댓글 수가 조회됐습니다."
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "게시글 댓글 수 조회에 실패했습니다.",
+            error: error.message
+        });
+    }
+}   
+
