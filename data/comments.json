@@ -1,5 +1,13 @@
 {
   "comments": [
-
+    {
+      "comment_id": 1,
+      "post_id": "3",
+      "user_nickname": "갱얼지",
+      "profile_image": "/uploads/profiles/1733279158876-icons8-dog-swim-64.png",
+      "user_id": 5,
+      "content": "ㅇㅇ",
+      "date": "2024-12-04-11:24:34"
+    }
   ]
 }

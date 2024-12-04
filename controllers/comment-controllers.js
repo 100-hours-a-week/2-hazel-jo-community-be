@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 const commentsFilePath = path.join(__dirname, '../data/comments.json');
 
 // JSON 파일에서 댓글 데이터 불러오는 함수 
-const loadCommentsData = () => {
+export const loadCommentsData = () => {
     if(!fs.existsSync(commentsFilePath)) {
         return { comments: [] };
     }
@@ -37,7 +37,7 @@ export const getComments = (req, res) => {
 }
 
 // JSON 파일에 댓글 데이터 저장하는 함수 
-const saveCommentsData = (comments) => {
+export const saveCommentsData = (comments) => {
     fs.writeFileSync(commentsFilePath, JSON.stringify(comments, null, 2));
 }
 

@@ -9,8 +9,36 @@
       "date": "2024-01-01 00:00:00",
       "image": "/image/contentImg2.jpg",
       "like": 122,
-      "view": 202321,
-      "comment": 5
+      "view": 202323,
+      "comment": 0
+    },
+    {
+      "post_id": 2,
+      "user_id": "1",
+      "profileImg": "http://localhost:5000/uploads/profiles%2F1731991788697-b7ad9159-6f67-4df8-af15-30619d1f640c.jpeg",
+      "title": "테스트용 게시글",
+      "content": "ㅇㅇ",
+      "date": "2024-12-04-10:28:15",
+      "image": "",
+      "like": 1,
+      "likes": [
+        1
+      ],
+      "view": 9,
+      "comment": 0
+    },
+    {
+      "post_id": 3,
+      "user_id": "5",
+      "profileImg": "/uploads/profiles/1733279158876-icons8-dog-swim-64.png",
+      "title": "테스트 게시글",
+      "content": "ㅇㅇ",
+      "date": "2024-12-04-10:54:29",
+      "image": "",
+      "like": 0,
+      "likes": [],
+      "view": 37,
+      "comment": 1
     }
   ]
 }

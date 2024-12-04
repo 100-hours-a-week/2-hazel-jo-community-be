@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const postsFilePath = path.join(__dirname, '../data/posts.json');
 
 // JSON 파일에서 게시글 데이터 불러오는 함수 
-const loadPostData = () => {
+export const loadPostData = () => {
     try {
         const data = fs.readFileSync(postsFilePath, 'utf8');
         return JSON.parse(data);
@@ -22,7 +22,7 @@ const loadPostData = () => {
 };
 
 // JSON 파일에 게시글 데이터 저장하는 함수 
-const savePostData = (posts) => {
+export const savePostData = (posts) => {
     try {
         fs.writeFileSync(postsFilePath, JSON.stringify(posts, null, 2));
     } catch (error) {

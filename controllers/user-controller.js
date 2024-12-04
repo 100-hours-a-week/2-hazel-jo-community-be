@@ -1,6 +1,8 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import { loadPostData, savePostData } from './post-controller.js';
+import { loadCommentsData, saveCommentsData } from './comment-controllers.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,7 +28,7 @@ const saveUserData = (users) => {
 export const editProfile = (req, res) => {
     const { userId } = req.params;
     const { email, nickname } = req.body;
-    const profileImage = req.file ? req.file.filename : undefined;
+    const profileImg = req.file ? req.file.filename : undefined;
     
     const users = loadUserData();
     const userIndex = users.user.findIndex(user => user.id === parseInt(userId));
@@ -42,18 +44,32 @@ export const editProfile = (req, res) => {
         ...users.user[userIndex],
         ...(email && { email }),
         ...(nickname && { nickname }),
-        ...(profileImage && { profileImage })
+        ...(profileImg && { profileImg })
     };    
 
     // json 파일에 수정된 프로필 정보 저장 
     try {
         saveUserData(users);
+
+        // 게시글과 댓글 데이터 업데이트
+        updatePostsAndComments(userId, nickname, profileImg);
+
+        
+        // 세션 정보 업데이트
+        req.session.user = {
+            userId: users.user[userIndex].id,
+            email: users.user[userIndex].email,
+            nickname: users.user[userIndex].nickname,
+            profile_image: profileImg ? `/uploads/profiles/${profileImg}` : users.user[userIndex].profileImg
+        };
+        
+
         return res.status(200).json({
             message: "프로필이 수정되었습니다.",
             user: {
                 email: users.user[userIndex].email,
                 nickname: users.user[userIndex].nickname,
-                profileImage: profileImage ? `/uploads/profiles/${profileImage}` : null
+                profileImage: profileImg ? `/uploads/profiles/${profileImg}` : null
             }
         });
     } catch (error) {
@@ -62,6 +78,30 @@ export const editProfile = (req, res) => {
         });
     }
 }
+
+
+// 게시글, 댓글 데이터 업데이트 
+const updatePostsAndComments = (userId, nickname, profileImg) => {
+    // 게시글 데이터 업데이트
+    const postsData = loadPostData();
+    postsData.posts.forEach(post => {
+        if (post.user_id === userId) {
+            post.profileImg = profileImg ? `/uploads/profiles/${profileImg}` : post.profileImg;
+        }
+    });
+    savePostData(postsData);
+
+    // 댓글 데이터 업데이트
+    const commentsData = loadCommentsData();
+    commentsData.comments.forEach(comment => {
+        if (Number(comment.user_id) === Number(userId)) {
+            comment.user_nickname = nickname;
+            comment.profile_image = profileImg ? `/uploads/profiles/${profileImg}` : comment.profile_image;
+        }
+    });
+    saveCommentsData(commentsData);
+}
+
 
 // 비밀번호 수정 editPassword
 export const editPassword = (req, res) => {
