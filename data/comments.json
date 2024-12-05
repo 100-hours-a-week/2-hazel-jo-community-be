@@ -2,12 +2,12 @@
   "comments": [
     {
       "comment_id": 1,
-      "post_id": "3",
-      "user_nickname": "갱얼지",
-      "profile_image": "/uploads/profiles/1733279158876-icons8-dog-swim-64.png",
-      "user_id": 5,
-      "content": "ㅇㅇ",
-      "date": "2024-12-04-11:24:34"
+      "post_id": "2",
+      "user_nickname": "핑핑이",
+      "profile_image": "/uploads/profiles/1731991788697-b7ad9159-6f67-4df8-af15-30619d1f640c.jpeg",
+      "user_id": 1,
+      "content": "테스트 댓글",
+      "date": "2024-12-05-01:32:22"
     }
   ]
 }

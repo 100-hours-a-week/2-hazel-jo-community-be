@@ -3,13 +3,13 @@
     {
       "post_id": 1,
       "user_id": "2",
-      "profileImg": "/image/profileImg2.png",
-      "title": "test title2",
+      "profileImg": "/uploads/profiles/1733326347125-matching_2_2.jpeg",
+      "title": "test title",
       "content": "태어난 강아지는 생후 10일까지를 출생견으로 본다. 강아지는 견종에 따라 체중이 매우 다양하며 태어난 지 14일 무렵 눈을 뜨고 소리에 반응하며 걷기 시작한다.몸떨기 반사는 그보다 1주일 정도 빠르다. 젖 빨기는 첫 2주간은 2시간마다 이루어지며 8일 만에 몸무게가 약 두 배로 늘어나는 등 빠르게 성장한다. 이 기간엔 따로 마련한 출산장에서 강아지의 관리를 전적으로 어미개에게 맡기는 것이 좋다.강아지가 자신의 몸을 부들부들 떠는 몸떨기 반사는 체온을 유지하기 위한 자연스러운 반응이다. 강아지는 생후 3주에서 3개월에 걸쳐 한 배에서 나온 강아지들과 어미, 사람들과 사회적 관계를 맺는 이행기를 거친다. 이 시기 강아지들에겐 나중에 어미나 같이 태어난 강아지와 떨어져 홀로 살아갈 앞날을 위해 다른 동물들과 마주치는 훈련등 사회화가 필요하다. 이행기의 강아지는 호기심이 왕성하여 바닥에 떨어진 것은 전기 코드나 작은 물건을 가리지 않고 물어뜯기 때문에 안전에 주의하여야 한다.",
       "date": "2024-01-01 00:00:00",
       "image": "/image/contentImg2.jpg",
       "like": 122,
-      "view": 202323,
+      "view": 202333,
       "comment": 0
     },
     {
@@ -17,27 +17,14 @@
       "user_id": "1",
       "profileImg": "http://localhost:5000/uploads/profiles%2F1731991788697-b7ad9159-6f67-4df8-af15-30619d1f640c.jpeg",
       "title": "테스트용 게시글",
-      "content": "ㅇㅇ",
-      "date": "2024-12-04-10:28:15",
-      "image": "",
+      "content": "확인",
+      "date": "2024-12-05-01:31:40",
+      "image": "/uploads/posts/1733329900890-Ð¾Ð±Ð¾Ð¸.jpeg",
       "like": 1,
       "likes": [
         1
       ],
-      "view": 9,
-      "comment": 0
-    },
-    {
-      "post_id": 3,
-      "user_id": "5",
-      "profileImg": "/uploads/profiles/1733279158876-icons8-dog-swim-64.png",
-      "title": "테스트 게시글",
-      "content": "ㅇㅇ",
-      "date": "2024-12-04-10:54:29",
-      "image": "",
-      "like": 0,
-      "likes": [],
-      "view": 37,
+      "view": 6,
       "comment": 1
     }
   ]

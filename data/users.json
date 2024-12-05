@@ -11,16 +11,16 @@
       "id": 2,
       "email": "dd@naver.com",
       "password": "Qwer123$",
-      "nickname": "테스트용1",
-      "profileImg": "1731991817333-af3435bb-5935-4d36-afad-c4e7efd141f4.jpeg"
+      "nickname": "테스트용",
+      "profileImg": "1733326347125-matching_2_2.jpeg"
     },
     {
       "id": 5,
       "email": "example03@naver.com",
-      "password": "Qwer123$",
-      "nickname": "갱얼지",
-      "profileImg": "1733279158876-icons8-dog-swim-64.png"
+      "password": "Zxcv123$",
+      "nickname": "가나디",
+      "profileImg": "1733280448715-dog.jpeg"
     }
   ],
-  "lastId": 5
+  "lastId": 10
 }
