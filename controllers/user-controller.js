@@ -142,13 +142,30 @@ export const deleteUser = (req, res) => {
         });
     }
 
-    // 사용자 삭제 
-    users.user.splice(userIndex, 1);
-    saveUserData(users);
+    try {
+        // 사용자 게시글 삭제 
+        const postsData = loadPostData();
+        postsData.posts = postsData.posts.filter(post => post.user_id !== userId);
+        savePostData(postsData);
 
-    return res.status(200).json({
-        message: "회원 탈퇴가 완료되었습니다."
-    });
+        // 사용자 댓글 삭제
+        const commentsData = loadCommentsData();
+        commentsData.comments = commentsData.comments.filter(comment => Number(comment.user_id) !== Number(userId));
+        saveCommentsData(commentsData);
+
+        // 사용자 삭제 
+        users.user.splice(userIndex, 1);
+        saveUserData(users);
+
+        return res.status(200).json({
+            message: "회원 탈퇴가 완료되었습니다."
+        });
+    } catch (error) {
+        console.error('회원 탈퇴 중 오류:', error);
+        return res.status(500).json({
+            message: "회원 탈퇴 처리 중 오류가 발생했습니다."
+        });
+    }
 }
 
 // logout 함수 
