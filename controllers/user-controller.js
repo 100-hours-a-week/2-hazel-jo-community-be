@@ -135,6 +135,7 @@ export const deleteUser = (req, res) => {
     const { userId } = req.params;
     const users = loadUserData();
     const userIndex = users.user.findIndex(user => user.id === parseInt(userId));
+    
 
     if(userIndex === -1) {
         return res.status(404).json({
@@ -157,8 +158,17 @@ export const deleteUser = (req, res) => {
         users.user.splice(userIndex, 1);
         saveUserData(users);
 
-        return res.status(200).json({
-            message: "회원 탈퇴가 완료되었습니다."
+        // 세션 삭제
+        req.session.destroy((err) => {
+            if (err) {
+                return res.status(500).json({
+                    message: "세션 삭제 중 오류가 발생했습니다."
+                });
+            }
+            res.clearCookie('connect.sid');
+            return res.status(200).json({
+                message: "회원 탈퇴가 완료되었습니다."
+            });
         });
     } catch (error) {
         console.error('회원 탈퇴 중 오류:', error);
