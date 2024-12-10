@@ -1,14 +1,20 @@
 import express from 'express';
 import path from 'path';
 import cors from 'cors'; 
+import session from 'express-session';
+import dotenv from 'dotenv'; 
+
+// 라우트 
 import authRoutes from './routes/auth-routes.js';
 import postRoutes from './routes/post-routes.js';
 import userRoutes from './routes/user-routes.js';
 import commentRoutes from './routes/comment-routes.js';
-import session from 'express-session';
 
-const __dirname = path.resolve();
+// 환경 변수 로드 
+dotenv.config();
+
 const app = express(); 
+const __dirname = path.resolve();
 
 // JSON 형식의 요청을 파싱하기 위한 미들웨어
 app.use(express.json());
@@ -29,9 +35,10 @@ app.use(cors({
     exposedHeaders: ['Content-Type', 'Authorization']
 }));
 
+
 // 세션 미들웨어 설정
 app.use(session({
-    secret: 'your-secret-key',  // * 추후 환경변수로 관리
+    secret: process.env.SESSION_SECRET || 'default-secret-key',
     resave: false,
     saveUninitialized: false,
     cookie: {
