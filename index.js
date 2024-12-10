@@ -10,11 +10,23 @@ import postRoutes from './routes/post-routes.js';
 import userRoutes from './routes/user-routes.js';
 import commentRoutes from './routes/comment-routes.js';
 
+// 데이터베이스 
+import connection from './config/mariadb.js'; 
+
 // 환경 변수 로드 
 dotenv.config();
 
 const app = express(); 
 const __dirname = path.resolve();
+
+// 데이터베이스 연결 
+connection.connect((err) => {
+    if(err) {
+        console.log(`데이터베이스 연결 실패 : ${err}`);
+    } else {
+        console.log(`데이터베이스 연결 성공`); 
+    }
+});
 
 // JSON 형식의 요청을 파싱하기 위한 미들웨어
 app.use(express.json());
