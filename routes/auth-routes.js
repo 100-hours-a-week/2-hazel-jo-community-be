@@ -2,7 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { signup, login, getCurrentUser } from '../controllers/auth-controllers.js';
+import { signup, login, getCurrentUser } from '../controllers/auth-controller.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
