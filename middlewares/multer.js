@@ -4,11 +4,17 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const rootDir = path.join(__dirname, '..'); 
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const folder = req.originalUrl.includes('/profile') ? 'uploads/profiles' : 'uploads/posts';
-        cb(null, path.join(__dirname, folder));
+        let folder;        
+        if (req.originalUrl.includes('/signup') || req.originalUrl.includes('/profile')) {
+            folder = path.join(rootDir, 'uploads/profiles');
+        } else {
+            folder = path.join(rootDir, 'uploads/posts');
+        }
+        cb(null, folder);
     },
     filename: (req, file, cb) => {
         const filename = file.originalname
