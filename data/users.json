@@ -1,13 +1,6 @@
 {
   "user": [
     {
-      "id": 1,
-      "email": "test@naver.com",
-      "password": "Qwer123$",
-      "nickname": "핑핑이",
-      "profileImg": "1731991788697-b7ad9159-6f67-4df8-af15-30619d1f640c.jpeg"
-    },
-    {
       "id": 2,
       "email": "dd@naver.com",
       "password": "Qwer123$",
@@ -20,7 +13,21 @@
       "password": "Zxcv123$",
       "nickname": "가나디",
       "profileImg": "1733280448715-dog.jpeg"
+    },
+    {
+      "id": 12,
+      "email": "test@naver.com",
+      "password": "Qwer123$",
+      "nickname": "핑핑",
+      "profileImg": "1733496276550-b7ad9159-6f67-4df8-af15-30619d1f640c.jpeg"
+    },
+    {
+      "id": 16,
+      "email": "hayaon0603@naver.com",
+      "password": "Qwer123$",
+      "nickname": "핑핑쓰",
+      "profileImg": "1733385205700-b7ad9159-6f67-4df8-af15-30619d1f640c.jpeg"
     }
   ],
-  "lastId": 10
+  "lastId": 23
 }

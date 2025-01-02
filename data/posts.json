@@ -9,23 +9,8 @@
       "date": "2024-01-01 00:00:00",
       "image": "/image/contentImg2.jpg",
       "like": 122,
-      "view": 202333,
+      "view": 202362,
       "comment": 0
-    },
-    {
-      "post_id": 2,
-      "user_id": "1",
-      "profileImg": "http://localhost:5000/uploads/profiles%2F1731991788697-b7ad9159-6f67-4df8-af15-30619d1f640c.jpeg",
-      "title": "테스트용 게시글",
-      "content": "확인",
-      "date": "2024-12-05-01:31:40",
-      "image": "/uploads/posts/1733329900890-Ð¾Ð±Ð¾Ð¸.jpeg",
-      "like": 1,
-      "likes": [
-        1
-      ],
-      "view": 6,
-      "comment": 1
     }
   ]
 }

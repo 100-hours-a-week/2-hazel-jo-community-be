@@ -40,9 +40,6 @@ export const editProfile = async (req, res) => {
 
 // 비밀번호 수정 editPassword
 export const editPassword = async (req, res) => {
-    if (!req.session || !req.session.user) {
-        return res.redirect('/login.html'); 
-    }
     const { userId } = req.params;
     const { password } = req.body;
     
