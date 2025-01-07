@@ -1,9 +1,9 @@
-import maria from 'mysql'; 
+import maria from 'mysql2'; 
 import dotenv from 'dotenv'; 
 
 dotenv.config();
 
-const connection = maria.createConnection({
+const pool = maria.createPool({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     user: process.env.DB_USER,
@@ -11,7 +11,7 @@ const connection = maria.createConnection({
     database: process.env.DB_NAME,
 });
 
-connection.on('error', (err) => {
+pool.on('error', (err) => {
     console.log(`데이터베이스 연결 실패 : ${err}`);
     console.error('데이터베이스 에러: ', err);
     console.error('에러 코드: ', err.code);
@@ -19,4 +19,4 @@ connection.on('error', (err) => {
     console.error('SQL 상태: ', err.sqlState);
 });
 
-export default connection; 
+export default pool; 

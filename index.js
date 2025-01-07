@@ -87,6 +87,6 @@ app.use((err, req, res, next) => {
 
     res.status(500).json({ 
         error: 'Internal Server Error',
-        message: process.env.NODE_ENV === 'development' ? err.message : '서버 에럭 발생',
+        message: process.env.NODE_ENV === 'development' ? err.message : '서버 에러 발생',
     });
 });
