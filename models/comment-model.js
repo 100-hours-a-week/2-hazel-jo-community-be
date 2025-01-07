@@ -1,4 +1,4 @@
-import connection from '../config/mariadb.js'; 
+import pool from '../config/mariadb.js'; 
 
 // 댓글 목록 loadCommentsData
 export const loadCommentsData = (postId) => {
@@ -11,7 +11,7 @@ export const loadCommentsData = (postId) => {
             WHERE c.post_id = ?
             ORDER BY c.created_at ASC 
         `;
-        connection.query(query, [postId], (err, results) => {
+        pool.query(query, [postId], (err, results) => {
             if(err) {
                 return reject(err);
             }
@@ -26,7 +26,7 @@ export const getCommentById = (commentId, userId) => {
     const query = `
         SELECT user_id FROM comment WHERE comment_id = ? AND user_id = ?
     `;
-    connection.query(query, [commentId, userId], (err, results) => {
+    pool.query(query, [commentId, userId], (err, results) => {
         if (err) {
             return reject(err);
             }
@@ -43,7 +43,7 @@ export const createComment = ({ postId, userId, content }) => {
             INSERT INTO comment (post_id, user_id, content)
             VALUES (?, ?, ?)
         `;
-        connection.query(query, [postId, userId, content], (err, results) => {
+        pool.query(query, [postId, userId, content], (err, results) => {
             if(err) {
                 return reject(err);
             }
@@ -58,7 +58,7 @@ export const deleteCommentById = ({ commentId, userId }) => {
         const query = `
             DELETE FROM comment WHERE comment_id = ? AND user_id = ?
         `;
-        connection.query(query, [commentId, userId], (err, results) => {
+        pool.query(query, [commentId, userId], (err, results) => {
             if(err) {
                 return reject(err);
             }
@@ -74,7 +74,7 @@ export const updateComment = ({ commentId, userId, content }) => {
             UPDATE comment SET content = ? 
             WHERE comment_id = ? AND user_id = ?
         `;
-        connection.query(query, [content, commentId, userId], (err, results) => {
+        pool.query(query, [content, commentId, userId], (err, results) => {
             if(err) {
                 return reject(err);
             }
@@ -92,7 +92,7 @@ export const updateCommentCount = (postId, action) => {
             return reject(err); 
         }
         const query = `UPDATE post SET comment_count = comment_count + ? WHERE post_id = ?`
-        connection.query(query, [incrementValue, postId], (err, results) => {
+        pool.query(query, [incrementValue, postId], (err, results) => {
             if(err) {
                 console.error("updateCommentCount - MySQL Error:", err);
                 return reject(err);

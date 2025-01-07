@@ -1,4 +1,4 @@
-import connection from '../config/mariadb.js';
+import pool from '../config/mariadb.js';
 
 // 게시글 생성 createPost 
 export const createPost = async ({ userId, title, content, image }) => {
@@ -8,7 +8,7 @@ export const createPost = async ({ userId, title, content, image }) => {
         VALUES (?, ?, ?, ?, NOW())
         `;
         const params = [userId, title, content, image];
-        connection.query(query, params, (err, results) => {
+        pool.query(query, params, (err, results) => {
             if(err) {
                 return reject(err);
             }
@@ -25,7 +25,7 @@ export const updatePost = async ({ postId, title, content, image, userId }) => {
         WHERE post_id = ? AND user_id = ?
         `;
         const params = [title, content, image, postId, userId || null];
-        connection.query(query, params, (err, results) => {
+        pool.query(query, params, (err, results) => {
             if(err) {
                 return reject(err);
             }
@@ -38,7 +38,7 @@ export const updatePost = async ({ postId, title, content, image, userId }) => {
 export const deletePostById = async (postId) => {
     return new Promise((resolve, reject) => {
         const query = `DELETE FROM post WHERE post_id =?`;
-        connection.query(query, [postId], (err, results) => {
+        pool.query(query, [postId], (err, results) => {
             if(err) {
                 return reject(err);
             }
@@ -51,7 +51,7 @@ export const deletePostById = async (postId) => {
 export const deleteCommentByPostId = async (postId) => {
     return new Promise((resolve, reject) => {
         const query = `DELETE FROM comment WHERE post_id = ?`;
-        connection.query(query, [postId], (err, results) => {
+        pool.query(query, [postId], (err, results) => {
             if(err) {
                 return reject(err);
             }
@@ -73,7 +73,7 @@ export const getPosts = async () => {
             LEFT JOIN users u ON p.user_id = u.user_id
             ORDER BY p.created_at ASC
         `; 
-        connection.query(query, (err, results) => {
+        pool.query(query, (err, results) => {
             if(err) {
                 return reject(err);
             }
@@ -108,7 +108,7 @@ export const getPostById = async (postId) => {
             LEFT JOIN users u ON p.user_id = u.user_id
             WHERE p.post_id = ?
             `; 
-        connection.query(query, [postId], (err, results)=> {
+        pool.query(query, [postId], (err, results)=> {
             if(err) {
                 return reject(err);
             }
@@ -120,34 +120,34 @@ export const getPostById = async (postId) => {
 // 좋아요 수 manageLike
 export const manageLike = async (postId, userId) => {
     return new Promise((resolve, reject) => {
-        connection.beginTransaction(err => {
+        pool.beginTransaction(err => {
             if(err) {
                 return reject(err);
             }
             // 좋아요 상태 확인 
             const userCheckQuery = `SELECT * FROM likes WHERE post_id = ? AND user_id = ?`;
             const params = [postId, userId];
-            connection.query(userCheckQuery, params, (err, results) => {
+            pool.query(userCheckQuery, params, (err, results) => {
                 if(err) {
-                    return connection.rollback(() => reject(err));
+                    return pool.rollback(() => reject(err));
                 }
                 // LIKES 좋아요 삭제 
                 if(results.length > 0) {
                     const deleteQuery = `DELETE FROM likes WHERE post_id = ? AND user_id = ?`;
-                    connection.query(deleteQuery, params, (err, deleteResults) => {
+                    pool.query(deleteQuery, params, (err, deleteResults) => {
                         if(err) {
-                            return connection.rollback(() => reject(err));
+                            return pool.rollback(() => reject(err));
                         }
                         // POST 좋아요 수 감소 
                         const decrementQuery = `UPDATE post SET \`like\` = \`like\` - 1 WHERE post_id = ?`;
-                        connection.query(decrementQuery, [postId], (err, decrementResults) => {
+                        pool.query(decrementQuery, [postId], (err, decrementResults) => {
                             if (err) {
-                                return connection.rollback(() => reject(err));
+                                return pool.rollback(() => reject(err));
                             }
                             // 커밋
-                            connection.commit(err => {
+                            pool.commit(err => {
                                 if (err) {
-                                    return connection.rollback(() => reject(err));
+                                    return pool.rollback(() => reject(err));
                                 }
                                 resolve({ action: 'removed', deleteResults, decrementResults });
                             });
@@ -156,20 +156,20 @@ export const manageLike = async (postId, userId) => {
                 } else {
                     // LIKES 좋아요 추가 
                     const insertQuery = `INSERT INTO likes (post_id, user_id) VALUES (?, ?)`;
-                    connection.query(insertQuery, params, (err, insertResults) => {
+                    pool.query(insertQuery, params, (err, insertResults) => {
                         if (err) {
-                            return connection.rollback(() => reject(err));
+                            return pool.rollback(() => reject(err));
                         }
                         // POST 좋아요 수 증가 
                         const incrementQuery = `UPDATE post SET \`like\` = \`like\` + 1 WHERE post_id = ?`;
-                        connection.query(incrementQuery, [postId], (err, incrementResults) => {
+                        pool.query(incrementQuery, [postId], (err, incrementResults) => {
                             if (err) {
-                                return connection.rollback(() => reject(err));
+                                return pool.rollback(() => reject(err));
                             }
                             // 커밋
-                            connection.commit(err => {
+                            pool.commit(err => {
                                 if (err) {
-                                    return connection.rollback(() => reject(err));
+                                    return pool.rollback(() => reject(err));
                                 }
                                 resolve({ action: 'added', insertResults, incrementResults });
                             });
@@ -185,7 +185,7 @@ export const manageLike = async (postId, userId) => {
 export const likePostById = async (postId) => {
     return new Promise((resolve, reject) => {
         const query = `SELECT \`like\` FROM post WHERE post_id = ?`;
-        connection.query(query, [postId], (err, results) => {
+        pool.query(query, [postId], (err, results) => {
             if(err) {
                 return reject(err);
             }
@@ -198,7 +198,7 @@ export const likePostById = async (postId) => {
 export const updateView = async (postId) => {
     return new Promise((resolve, reject) => {
         const query = `UPDATE post SET view = view + 1 WHERE post_id = ?`;
-        connection.query(query, [postId], (err, results) => {
+        pool.query(query, [postId], (err, results) => {
             if(err) {
                 return reject(err);
             }
@@ -211,7 +211,7 @@ export const updateView = async (postId) => {
 export const getCommentCount = async (postId) => {
     return new Promise((resolve, reject) => {
         const query = `SELECT comment_count FROM post WHERE post_id = ?`;
-        connection.query(query, [postId], (err, results) => {
+        pool.query(query, [postId], (err, results) => {
             if(err) {
                 return reject(err);
             }

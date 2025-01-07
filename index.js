@@ -11,7 +11,7 @@ import userRoutes from './routes/user-routes.js';
 import commentRoutes from './routes/comment-routes.js';
 
 // 데이터베이스 
-import connection from './config/mariadb.js'; 
+import pool from './config/mariadb.js'; 
 
 // 환경 변수 로드 
 dotenv.config();
@@ -19,12 +19,13 @@ dotenv.config();
 const app = express(); 
 const __dirname = path.resolve();
 
-// 데이터베이스 연결 
-connection.connect((err) => {
-    if(err) {
-        console.log(`데이터베이스 연결 실패 : ${err}`);
+// 데이터베이스 연결 체크 
+pool.getConnection((err, connection) => {
+    if (err) {
+        console.error(`데이터베이스 연결 실패 : ${err}`);
     } else {
-        console.log(`데이터베이스 연결 성공`); 
+        console.log('데이터베이스 연결 성공');
+        connection.release(); 
     }
 });
 
