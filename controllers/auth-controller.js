@@ -1,3 +1,4 @@
+import session from 'express-session';
 import { 
     signupUser, 
     loginUser, 
@@ -44,6 +45,11 @@ export const signup = async (req, res) => {
 
 // 로그인 login 
 export const login = async(req, res) => {
+    console.log('로그인 시도 요청 데이터 : ', {
+        email: req.body.email,
+        hearder: req.headers,
+        session: req.session
+    }); 
     const { email, password } = req.body;
     
     if (!email || !password) {
@@ -58,6 +64,7 @@ export const login = async(req, res) => {
                 message: "존재하지 않는 이메일입니다." 
             });
         }
+        
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({ 
@@ -75,8 +82,11 @@ export const login = async(req, res) => {
             user: req.session.user,
         });
     } catch (error) {
+        console.error('로그인 처리 에러 : ', error);
+        console.error('에러 stack : ', error.stack);
         res.status(500).json({ 
-            message: "로그인에 실패했습니다." 
+            message: "로그인에 실패했습니다.",
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined, 
         });
     }
 }

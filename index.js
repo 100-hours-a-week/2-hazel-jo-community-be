@@ -76,6 +76,16 @@ app.listen(PORT, '0.0.0.0', () => {
 });
 
 app.use((err, req, res, next) => {
-    console.error(err.stack); 
-    res.status(500).json({ error: 'Internal Server Error', message: err.message });
+    console.error('에러 발생 시간: ', new Date().toISOString());
+    console.error('에러 메시지: ', err.message);
+    console.error('에러 스택: ',err.stack);
+    console.error('요청 URL', req.originalUrl);
+    console.error('요청 메서드: ', req.method);
+    console.error('요청 헤더: ', req.headers);
+    console.error('요청 바디: ', req.body);
+
+    res.status(500).json({ 
+        error: 'Internal Server Error',
+        message: process.env.NODE_ENV === 'development' ? err.message : '서버 에럭 발생',
+    });
 });
