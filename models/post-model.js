@@ -120,62 +120,99 @@ export const getPostById = async (postId) => {
 // 좋아요 수 manageLike
 export const manageLike = async (postId, userId) => {
     return new Promise((resolve, reject) => {
-        pool.beginTransaction(err => {
-            if(err) {
+        pool.getConnection((err, connection) => {
+            if (err) {
                 return reject(err);
             }
-            // 좋아요 상태 확인 
-            const userCheckQuery = `SELECT * FROM likes WHERE post_id = ? AND user_id = ?`;
-            const params = [postId, userId];
-            pool.query(userCheckQuery, params, (err, results) => {
-                if(err) {
-                    return pool.rollback(() => reject(err));
+
+            connection.beginTransaction(err => {
+                if (err) {
+                    connection.release();
+                    return reject(err);
                 }
-                // LIKES 좋아요 삭제 
-                if(results.length > 0) {
-                    const deleteQuery = `DELETE FROM likes WHERE post_id = ? AND user_id = ?`;
-                    pool.query(deleteQuery, params, (err, deleteResults) => {
-                        if(err) {
-                            return pool.rollback(() => reject(err));
-                        }
-                        // POST 좋아요 수 감소 
-                        const decrementQuery = `UPDATE post SET \`like\` = \`like\` - 1 WHERE post_id = ?`;
-                        pool.query(decrementQuery, [postId], (err, decrementResults) => {
+
+                // 좋아요 상태 확인 
+                const userCheckQuery = `SELECT * FROM likes WHERE post_id = ? AND user_id = ?`;
+                const params = [postId, userId];
+                
+                connection.query(userCheckQuery, params, (err, results) => {
+                    if (err) {
+                        return connection.rollback(() => {
+                            connection.release();
+                            reject(err);
+                        });
+                    }
+
+                    // LIKES 좋아요 삭제 
+                    if (results.length > 0) {
+                        const deleteQuery = `DELETE FROM likes WHERE post_id = ? AND user_id = ?`;
+                        connection.query(deleteQuery, params, (err, deleteResults) => {
                             if (err) {
-                                return pool.rollback(() => reject(err));
+                                return connection.rollback(() => {
+                                    connection.release();
+                                    reject(err);
+                                });
                             }
-                            // 커밋
-                            pool.commit(err => {
+
+                            // POST 좋아요 수 감소 
+                            const decrementQuery = `UPDATE post SET \`like\` = \`like\` - 1 WHERE post_id = ?`;
+                            connection.query(decrementQuery, [postId], (err, decrementResults) => {
                                 if (err) {
-                                    return pool.rollback(() => reject(err));
+                                    return connection.rollback(() => {
+                                        connection.release();
+                                        reject(err);
+                                    });
                                 }
-                                resolve({ action: 'removed', deleteResults, decrementResults });
+
+                                // 커밋
+                                connection.commit(err => {
+                                    if (err) {
+                                        return connection.rollback(() => {
+                                            connection.release();
+                                            reject(err);
+                                        });
+                                    }
+                                    connection.release();
+                                    resolve({ action: 'removed', deleteResults, decrementResults });
+                                });
                             });
                         });
-                    });
-                } else {
-                    // LIKES 좋아요 추가 
-                    const insertQuery = `INSERT INTO likes (post_id, user_id) VALUES (?, ?)`;
-                    pool.query(insertQuery, params, (err, insertResults) => {
-                        if (err) {
-                            return pool.rollback(() => reject(err));
-                        }
-                        // POST 좋아요 수 증가 
-                        const incrementQuery = `UPDATE post SET \`like\` = \`like\` + 1 WHERE post_id = ?`;
-                        pool.query(incrementQuery, [postId], (err, incrementResults) => {
+                    } else {
+                        // LIKES 좋아요 추가 
+                        const insertQuery = `INSERT INTO likes (post_id, user_id) VALUES (?, ?)`;
+                        connection.query(insertQuery, params, (err, insertResults) => {
                             if (err) {
-                                return pool.rollback(() => reject(err));
+                                return connection.rollback(() => {
+                                    connection.release();
+                                    reject(err);
+                                });
                             }
-                            // 커밋
-                            pool.commit(err => {
+
+                            // POST 좋아요 수 증가 
+                            const incrementQuery = `UPDATE post SET \`like\` = \`like\` + 1 WHERE post_id = ?`;
+                            connection.query(incrementQuery, [postId], (err, incrementResults) => {
                                 if (err) {
-                                    return pool.rollback(() => reject(err));
+                                    return connection.rollback(() => {
+                                        connection.release();
+                                        reject(err);
+                                    });
                                 }
-                                resolve({ action: 'added', insertResults, incrementResults });
+
+                                // 커밋
+                                connection.commit(err => {
+                                    if (err) {
+                                        return connection.rollback(() => {
+                                            connection.release();
+                                            reject(err);
+                                        });
+                                    }
+                                    connection.release();
+                                    resolve({ action: 'added', insertResults, incrementResults });
+                                });
                             });
                         });
-                    });
-                }
+                    }
+                });
             });
         });
     });
