@@ -20,8 +20,9 @@ export const editProfile = async (req, res) => {
             });
         }
         const updatedUser = await getUserById(userId);
+        
         req.session.user = {
-            userId: updatedUser.userId,
+            userId: updatedUser.user_id,
             email: updatedUser.email,
             nickname: updatedUser.nickname,
             profileImg: updatedUser.profileImg,
