@@ -26,9 +26,14 @@ export const editProfile = async (req, res) => {
             email: updatedUser.email,
             nickname: updatedUser.nickname,
             profileImg: updatedUser.profileImg,
-        }
+        }; 
         return res.status(200).json({
-            message: "프로필이 수정되었습니다."
+            message: "프로필이 수정되었습니다.",
+            user: {
+                email: updatedUser.email,
+                nickname: updatedUser.nickname,
+                profileImage: updatedUser.profileImg,
+            },
         });
         
     } catch (error) {
