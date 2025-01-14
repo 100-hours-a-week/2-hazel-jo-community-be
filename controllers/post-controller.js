@@ -193,7 +193,7 @@ export const likeCount = async (req, res) => {
             }
             return res.status(200).json({
                 message: "게시글 좋아요 수가 조회되었습니다.",
-                like: result[0].like,
+                like: result.like,
             });
         } catch (error) {
         return res.status(500).json({
@@ -215,7 +215,7 @@ export const commentCount = async (req, res) => {
             }); 
         }
         res.status(200).json({
-            commentCount: comments[0].comment_count,
+            commentCount: comments, 
             message: "댓글 수 조회에 성공했습니다."
         });
     } catch (error) {
