@@ -45,21 +45,22 @@ export const withdrawUser = async (userId) => {
         await connection.beginTransaction();
 
         // 댓글 삭제
-        const deleteComments = await connection.query(`
+        await connection.query(`
             DELETE FROM comment WHERE user_id = ?
         `, [userId]);
 
         // 게시글 삭제
-        const deletePosts = await connection.query(`
+        await connection.query(`
             DELETE FROM post WHERE user_id = ?
         `, [userId]);
 
         // 사용자 삭제
-        const deleteUser = await connection.query(`
+        const [deleteResult] = await connection.query(`
             DELETE FROM users WHERE user_id = ?
         `, [userId]);
 
         await connection.commit();
+        return deleteResult;
     } catch (error) {
         console.error('withdrawUser Error:', error);
         await connection.rollback();

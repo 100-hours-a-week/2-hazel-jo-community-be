@@ -82,22 +82,33 @@ export const deleteUser = async (req, res) => {
 
     try {
         await withdrawUser(userId);
+
+        // 쿠키 삭제 
+        res.clearCookie('connect.sid'); 
+
+        // 세션 삭제 
         req.session.destroy((err) => {
-            if(err) {
+            if (err) {
+                console.error('세션 삭제 오류:', err);
                 return res.status(500).json({ 
                     message: "세션 삭제 중 오류가 발생했습니다."
                 });
             }
             return res.status(200).json({
-                message: "회원 탈퇴가 완료되었습니다."
+                success: true, 
+                message: "회원 탈퇴가 완료되었습니다.",
+                sessionCleared: true, 
             });
-        })
+        });
+        console.log('요청 경로:', req.path, '요청 파라미터:', req.params);
     } catch (error) {
+        console.error('deleteUser Error:', error);
         return res.status(500).json({
-            message: "회원 탈퇴에 실패했습니다."
-        }); 
+            message: "회원 탈퇴에 실패했습니다.",
+            error: error.message,
+        });
     }
-}
+};
 
 
 // logout 함수 
