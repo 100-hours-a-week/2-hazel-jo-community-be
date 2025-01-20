@@ -39,9 +39,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// trust proxy 설정
+app.set('trust proxy', 1);
+
 // CORS 설정
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://43.203.89.65:3000', 'http://43.203.89.65'],
+    origin: ['http://localhost:3000', 'http://hazel-grove.kro.kr:3000'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
@@ -57,6 +60,7 @@ app.use(session({
     cookie: {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
         maxAge: 24 * 60 * 60 * 1000 // 24시간
     }
 }));
