@@ -25,12 +25,11 @@ const storage = multer.diskStorage({
     },
 });
 
-export const upload = multer({ storage });
+// export const upload = multer({ storage });
 
-/* 
+
 // 파일 크기 제한 
-const upload = multer({
+export const upload = multer({
     storage,
-    limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
 });
-*/
