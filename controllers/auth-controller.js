@@ -1,4 +1,3 @@
-import session from 'express-session';
 import { 
     signupUser, 
     loginUser, 
